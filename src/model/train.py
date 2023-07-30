@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import mlflow
+import numpy as np
 
 # define functions
 def main(args):
@@ -35,9 +36,19 @@ def get_csvs_df(path):
 
 
 def split_data(df):
-    X = df.drop("target", axis=1)
-    y = df["target"]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Selecting specific columns as features (X) and target variable (y)
+    X = df[['Pregnancies', 'PlasmaGlucose', 'DiastolicBloodPressure', 'TricepsThickness',
+            'SerumInsulin', 'BMI', 'DiabetesPedigree', 'Age']].values
+    y = df['Diabetic'].values
+
+    # Print the number of samples in the dataset and the class distribution
+    print("Number of samples:", len(X))
+    print("Class distribution:", np.unique(y, return_counts=True))
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=0)
+
+    # Return the training and testing sets
     return X_train, X_test, y_train, y_test
 
 
